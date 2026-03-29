@@ -1,0 +1,31 @@
+{
+  "name": "Vue3 + Pinia + Vite DevContainer",
+  "dockerComposeFile": [
+    "docker-compose.yml"
+  ],
+  "service": "dev",
+  "workspaceFolder": "/app",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "editor.formatOnSave": true,
+        "eslint.format.enable": true,
+        "eslint.lintTask.enable": true,
+        "prettier.requireConfig": true,
+        "terminal.integrated.defaultProfile.linux": "bash"
+      },
+      "extensions": [
+        "Vue.volar",
+        "Vue.vscode-typescript-vue-plugin",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "johnsoncodehk.volar",
+        "antfu.iconify",
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "Vue.vscode-pinia-devtools",
+        "ZixuanChen.vitest-explorer"
+      ]
+    }
+  }
+}

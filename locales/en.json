@@ -1,0 +1,112 @@
+{
+  "login": {
+    "title": "Login",
+    "password": "Password",
+    "login": "Login",
+    "loggingIn": "Logging in..."
+  },
+  "navbar": {
+    "theme": "Theme",
+    "language": "Language",
+    "spanish": "Spanish",
+    "english": "English",
+    "brand": "Dashboard",
+    "add": "Add",
+    "upload": "Upload JSON/Resume...",
+    "seed": "Load sample data",
+    "logout": "Logout"
+  },
+  "form": {
+    "name": "Name",
+    "label": "Label",
+    "email": "Email",
+    "phone": "Phone",
+    "save": "Save",
+    "cancel": "Cancel",
+    "title": "Title",
+    "date": "Date",
+    "awarder": "Awarder",
+    "summary": "Summary",
+    "issuer": "Issuer",
+    "url": "URL",
+    "required": "{field} is required.",
+    "invalidEmail": "Email is not valid.",
+    "invalidUrl": "URL is not valid.",
+    "image": "Image URL",
+    "location": "Location",
+    "address": "Address",
+    "postalCode": "Postal Code",
+    "city": "City",
+    "region": "Region",
+    "countryCode": "Country Code",
+    "profiles": "Profiles",
+    "network": "Network",
+    "username": "Username",
+    "invalidUrl": "URL is not valid.",
+    "language": "Language",
+    "fluency": "Fluency",
+    "reference": "Reference",
+    "organization": "Organization",
+    "position": "Position",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "reset": "Reset"
+  },
+  "education": {
+    "title": "Education"
+  },
+  "publication": {
+    "title": "Publications"
+  },
+  "project": {
+    "title": "Projects"
+  },
+  "language": {
+    "title": "Languages"
+  },
+  "reference": {
+    "title": "References"
+  },
+  "skill": {
+    "title": "Skills"
+  },
+  "work": {
+    "title": "Work Experience"
+  },
+  "certificate": {
+    "title": "Certificates"
+  },
+  "basic": {
+    "title": "Basic Info"
+  },
+  "volunteer": {
+    "title": "Volunteer"
+  },
+  "award": {
+    "title": "Awards"
+  },
+  "common": {
+    "reload": "Reload",
+    "loading": "Loading...",
+    "create": "Create new",
+    "edit": "Edit",
+    "delete": "Delete",
+    "reset": "Reset",
+    "id": "ID",
+    "actions": "Actions",
+    "noData": "No data."
+  },
+  "notifications": {
+    "title": "Notifications",
+    "syncError": "Sync completed. Created: {created}, Errors: {errors}",
+    "syncSuccess": "Sync completed. Created: {created}",
+    "markAll": "Mark all read",
+    "noNotifications": "No notifications"
+  },
+  "interest": {
+    "title": "Interests"
+  },
+  "resource": {
+    "title": "Resources"
+  }
+}

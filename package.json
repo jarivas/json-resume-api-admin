@@ -1,0 +1,29 @@
+{
+  "type": "module",
+  "name": "laravel-vue-frontend",
+  "private": true,
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "test": "vitest run",
+    "lint": "eslint --ext .js,.vue src components router services stores views",
+    "format": "prettier --write \"src/**/*.{js,vue,css,scss}\""
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vue/test-utils": "^2.4.6",
+    "flush-promises": "^1.0.2",
+    "jsdom": "^29.0.1",
+    "vite": "^5.0.0",
+    "vitest": "^4.1.1",
+    "vue": "^3.4.0"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "axios": "^1.6.0",
+    "bootstrap": "^5.3.0",
+    "pinia": "^2.1.7",
+    "vue-i18n": "^9.14.5",
+    "vue-router": "^4.3.0"
+  }
+}

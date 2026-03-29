@@ -1,0 +1,111 @@
+{
+  "login": {
+    "title": "Iniciar sesión",
+    "password": "Contraseña",
+    "login": "Entrar",
+    "loggingIn": "Entrando..."
+  },
+  "navbar": {
+    "theme": "Tema",
+    "language": "Idioma",
+    "spanish": "Español",
+    "english": "Inglés",
+    "brand": "Panel",
+    "add": "Añadir",
+    "upload": "Cargar JSON/Resume...",
+    "seed": "Cargar datos de ejemplo",
+    "logout": "Salir"
+  },
+  "form": {
+    "name": "Nombre",
+    "label": "Etiqueta",
+    "email": "Email",
+    "phone": "Teléfono",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "title": "Título",
+    "date": "Fecha",
+    "awarder": "Otorgante",
+    "summary": "Resumen",
+    "issuer": "Emisor",
+    "url": "URL",
+    "required": "{field} es obligatorio.",
+    "invalidEmail": "El email no es válido.",
+    "invalidUrl": "La URL no es válida.",
+    "image": "URL de imagen",
+    "location": "Ubicación",
+    "address": "Dirección",
+    "postalCode": "Código postal",
+    "city": "Ciudad",
+    "region": "Región",
+    "countryCode": "Código país",
+    "profiles": "Perfiles",
+    "network": "Red",
+    "username": "Usuario",
+    "language": "Idioma",
+    "fluency": "Nivel",
+    "reference": "Referencia",
+    "organization": "Organización",
+    "position": "Puesto",
+    "startDate": "Fecha inicio",
+    "endDate": "Fecha fin",
+    "reset": "Restablecer"
+  },
+  "education": {
+    "title": "Educación"
+  },
+  "publication": {
+    "title": "Publicaciones"
+  },
+  "project": {
+    "title": "Proyectos"
+  },
+  "language": {
+    "title": "Idiomas"
+  },
+  "reference": {
+    "title": "Referencias"
+  },
+  "skill": {
+    "title": "Skills"
+  },
+  "work": {
+    "title": "Experiencia Laboral"
+  },
+  "certificate": {
+    "title": "Certificados"
+  },
+  "basic": {
+    "title": "Datos Básicos"
+  },
+  "volunteer": {
+    "title": "Voluntariado"
+  },
+  "award": {
+    "title": "Premios"
+  },
+  "common": {
+    "reload": "Recargar",
+    "loading": "Cargando...",
+    "create": "Crear nuevo",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "reset": "Restablecer",
+    "id": "ID",
+    "actions": "Acciones",
+    "noData": "No hay datos."
+  },
+  "notifications": {
+    "title": "Notificaciones",
+    "syncError": "Sincronización completada. Creado: {created}, Errores: {errors}",
+    "syncSuccess": "Sincronización completada. Creado: {created}",
+    "markAll": "Marcar todas leídas",
+    "noNotifications": "No hay notificaciones"
+  },
+  "interest": {
+    "title": "Intereses"
+  },
+  "resource": {
+    "title": "Recursos"
+  }
+}
