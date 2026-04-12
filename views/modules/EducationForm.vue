@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="onSubmit" novalidate>
+    <!-- import by URL/file removed from popup per UX request -->
     <div class="mb-3">
       <label class="form-label">{{ $t('form.institution') }}</label>
       <input
@@ -77,8 +78,9 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import { useEducationStore } from '../../stores/modules/education'
 const props = defineProps({ modelValue: Object, busy: { type: Boolean, default: false } })
-const emit = defineEmits(['submit', 'cancel'])
+const emit = defineEmits(['submit', 'cancel', 'imported'])
 const form = ref({
   institution: '',
   url: '',
@@ -90,6 +92,9 @@ const form = ref({
   courses: '',
 })
 const submitted = ref(false)
+
+const educationStore = useEducationStore()
+// import functionality removed from popup (list views still support import)
 
 watch(
   () => props.modelValue,
@@ -123,4 +128,8 @@ function onSubmit() {
     : []
   emit('submit', payload)
 }
+
+// import handler removed
+
+// file import via direct upload removed from popup; URL import remains
 </script>

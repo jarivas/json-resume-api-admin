@@ -42,8 +42,21 @@ const router = createRouter({
 
 // Protección de rutas: solo /login es pública
 import { useAuthStore } from '../stores/auth';
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   const auth = useAuthStore();
+  // Prevent navigation while a long-running import is in progress
+  try {
+    const mod = await import('../stores/ui')
+    const ui = mod.useUIStore()
+    if (ui && ui.busy) {
+      // Inform user and block navigation
+      // eslint-disable-next-line no-alert
+      alert('Un proceso de importación está en curso. Por favor espere hasta que termine.');
+      return next(false)
+    }
+  } catch (e) {
+    // ignore store import errors
+  }
   if (to.name !== 'login' && !auth.token) {
     next({ name: 'login' });
   } else if (to.name === 'login' && auth.token) {

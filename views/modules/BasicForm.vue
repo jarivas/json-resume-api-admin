@@ -68,16 +68,6 @@
       />
     </div>
     <div class="mb-3">
-      <label class="form-label">{{ $t('form.image') || 'Image URL' }}</label>
-      <input
-        v-model="form.image"
-        class="form-control"
-        type="url"
-        :disabled="busy"
-        placeholder="e.g. https://example.com/photo.jpg"
-      />
-    </div>
-    <div class="mb-3">
       <label class="form-label">{{ $t('form.summary') }}</label>
       <textarea
         v-model="form.summary"

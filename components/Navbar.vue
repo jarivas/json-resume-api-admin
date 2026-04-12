@@ -63,7 +63,7 @@
             <div class="btn-group" role="group" aria-label="Language selector">
               <button
                 type="button"
-                class="btn btn-light btn-sm d-flex align-items-center"
+                class="btn btn-outline-secondary btn-sm d-flex align-items-center"
                 :class="{ active: locale === 'es' }"
                 @click.prevent="handleSetLocale('es')"
                 title="Español"
@@ -73,7 +73,7 @@
               </button>
               <button
                 type="button"
-                class="btn btn-light btn-sm d-flex align-items-center"
+                class="btn btn-outline-secondary btn-sm d-flex align-items-center"
                 :class="{ active: locale === 'en' }"
                 @click.prevent="handleSetLocale('en')"
                 title="English"
@@ -89,19 +89,27 @@
           <li class="nav-item me-2 d-flex align-items-center">
             <div class="d-flex align-items-center">
               <button
-                class="btn btn-outline-light btn-sm me-2"
+                class="btn btn-outline-secondary btn-sm me-2"
                 @click="handleThemeToggle"
                 :title="$t('navbar.theme') || 'Theme'"
               >
-                <span v-if="props.theme === 'dark'">🌙</span>
-                <span v-else>☀️</span>
+                <i v-if="ui.theme === 'dark'" class="bi bi-moon-fill" aria-hidden="true"></i>
+                <i v-else class="bi bi-sun-fill" aria-hidden="true"></i>
               </button>
               <button
-                class="btn btn-outline-light btn-sm position-relative"
+                class="btn btn-outline-secondary btn-sm me-2 d-flex align-items-center"
+                @click="handleTriggerResume"
+                :title="$t('navbar.importResume') || 'Importar CV'"
+              >
+                <i class="bi bi-file-earmark-arrow-up me-1" aria-hidden="true"></i>
+                {{ $t('navbar.importResumeShort') || 'Importar CV' }}
+              </button>
+              <button
+                class="btn btn-outline-secondary btn-sm position-relative"
                 @click="handleSyncToggle"
                 aria-label="Notificaciones"
               >
-                🔔
+                <i class="bi bi-bell" aria-hidden="true"></i>
                 <span
                   v-if="props.unread > 0"
                   class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
@@ -119,19 +127,20 @@
 
 <script setup>
 import { defineProps } from 'vue'
+import { useUIStore } from '../stores/ui'
 const props = defineProps({
   locale: { type: String, default: 'es' },
   busy: { type: Boolean, default: false },
   unread: { type: Number, default: 0 },
-  theme: { type: String, default: 'light' },
 })
+const ui = useUIStore()
 const emit = defineEmits([
   'change-locale',
   'open-add',
   'trigger-json-upload',
+  'trigger-resume-upload',
   'seed-sample',
   'toggle-notifications',
-  'toggle-theme',
   'logout',
 ])
 
@@ -159,7 +168,11 @@ function handleSyncToggle() {
 
 function handleThemeToggle() {
   if (props.busy) return
-  emit('toggle-theme')
+  ui.toggleTheme()
+}
+function handleTriggerResume() {
+  if (props.busy) return
+  emit('trigger-resume-upload')
 }
 </script>
 

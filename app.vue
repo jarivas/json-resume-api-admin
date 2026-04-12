@@ -1,17 +1,25 @@
 <template>
   <div>
+    <div v-if="ui.busy" class="global-busy-overlay" role="status" aria-live="polite">
+      <div class="busy-content text-center">
+        <div class="spinner-border text-light" role="status" aria-hidden="true"></div>
+        <div class="mt-3">
+          <strong>{{ $t('navbar.importResume') || 'Importando...' }}</strong>
+        </div>
+        <div class="mt-1 small">{{ $t('messages.importInProgress') || 'El proceso de importación puede tardar varios minutos. Por favor espere.' }}</div>
+      </div>
+    </div>
     <Navbar
       v-if="$route.name !== 'login'"
       :locale="$i18n.locale"
       :busy="ui.busy"
       :unread="unreadCount"
-      :theme="theme"
       @change-locale="(val) => ($i18n.locale = val)"
       @open-add="openAddModal"
       @trigger-json-upload="triggerJsonUpload"
+      @trigger-resume-upload="triggerResumeUpload"
       @seed-sample="seedSampleData"
       @toggle-notifications="toggleNotifications"
-      @toggle-theme="toggleTheme"
       @logout="() => $router.push('/login')"
     />
 
@@ -21,6 +29,13 @@
       accept="application/json"
       class="d-none"
       @change="handleJsonFile"
+    />
+    <input
+      id="resume-upload"
+      type="file"
+      accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      class="d-none"
+      @change="handleResumeFile"
     />
 
     <main class="container py-4">
@@ -92,10 +107,10 @@
 
           <div class="d-flex justify-content-end mt-3">
             <button class="btn btn-secondary me-2" @click="closeAddModal" :disabled="ui.busy">
-              {{ $t('buttons.cancel') }}
+              {{ $t('form.cancel') }}
             </button>
             <button class="btn btn-primary" @click="createItem" :disabled="ui.busy">
-              {{ $t('buttons.save') }}
+              {{ $t('form.save') }}
             </button>
           </div>
         </div>
@@ -109,6 +124,7 @@ import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Navbar from './components/Navbar.vue'
 import NotificationsPanel from './components/NotificationsPanel.vue'
+import api from './services/api'
 import { useUIStore } from './stores/ui'
 
 const showAddModal = ref(false)
@@ -121,16 +137,6 @@ const showNotifications = ref(false)
 const notifications = ref([])
 const { t } = useI18n()
 const unreadCount = computed(() => notifications.value.filter((n) => !n.read).length)
-const theme = ref('light')
-
-function applyThemeClass(name) {
-  try {
-    if (name === 'dark') document.body.classList.add('theme-dark')
-    else document.body.classList.remove('theme-dark')
-  } catch (e) {
-    // ignore
-  }
-}
 
 function persistNotifications() {
   try {
@@ -147,13 +153,7 @@ try {
   notifications.value = []
 }
 
-try {
-  const savedTheme = localStorage.getItem('jr_theme')
-  if (savedTheme) theme.value = savedTheme
-  applyThemeClass(theme.value)
-} catch (e) {
-  // ignore
-}
+// theme is handled by the ui store (stores/ui.js)
 
 watch(notifications, () => persistNotifications(), { deep: true })
 
@@ -170,6 +170,53 @@ function closeAddModal() {
 function triggerJsonUpload() {
   const el = document.getElementById('sample-upload')
   if (el) el.click()
+}
+
+function triggerResumeUpload() {
+  const el = document.getElementById('resume-upload')
+  if (el) el.click()
+}
+
+async function handleResumeFile(e) {
+  const file = e.target.files && e.target.files[0]
+  if (!file) return alert('No file selected')
+
+  const maxBytes = 20 * 1024 * 1024 // 20 MB
+  const allowed = ['pdf', 'doc', 'docx']
+  const name = file.name || ''
+  const ext = name.split('.').pop().toLowerCase()
+  if (!allowed.includes(ext)) return alert('Tipo de archivo no permitido. Solo pdf/doc/docx')
+  if (file.size > maxBytes) return alert('Archivo demasiado grande (máx 20 MB)')
+
+  ui.setBusy(true)
+  try {
+    const fd = new FormData()
+    fd.append('file', file)
+    const res = await api.post('/import/resume', fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    notifications.value.unshift({
+      id: Date.now(),
+      title: 'Importar CV',
+      body: 'CV importado correctamente',
+      read: false,
+      date: new Date().toISOString(),
+    })
+    persistNotifications()
+  } catch (err) {
+    console.error(err)
+    notifications.value.unshift({
+      id: Date.now(),
+      title: 'Importar CV',
+      body: 'Error al importar CV',
+      read: false,
+      date: new Date().toISOString(),
+    })
+    persistNotifications()
+    alert('Error al subir el CV')
+  } finally {
+    ui.setBusy(false)
+  }
 }
 
 function toggleNotifications() {
@@ -524,56 +571,88 @@ async function seedSampleData() {
 
 onMounted(() => {
   loadLocalStorageAtStartup()
-})
-
-function toggleTheme() {
-  theme.value = theme.value === 'dark' ? 'light' : 'dark'
   try {
-    localStorage.setItem('jr_theme', theme.value)
+    if (typeof ui.initTheme === 'function') ui.initTheme()
   } catch (e) {
     // ignore
   }
-  applyThemeClass(theme.value)
-}
+})
 </script>
 
 <style>
+:root{
+  --bs-body-bg: #f8f9fa;
+  --bs-body-color: #212529;
+  --bs-card-bg: #ffffff;
+  --bs-card-color: #212529;
+  --bs-border-color: #dee2e6;
+  --bs-input-bg: #ffffff;
+  --bs-input-color: #212529;
+  --bs-badge-danger-bg: #dc3545;
+}
+
+[data-bs-theme="dark"]{
+  --bs-body-bg: #121212;
+  --bs-body-color: #e9ecef;
+  --bs-card-bg: #1e1e1e;
+  --bs-card-color: #e9ecef;
+  --bs-border-color: #2b2b2b;
+  --bs-input-bg: #2a2a2a;
+  --bs-input-color: #e9ecef;
+  --bs-badge-danger-bg: #c0392b;
+}
+
 body {
-  background: #f8f9fa;
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
 }
-body.theme-dark {
-  background: #121212;
-  color: #e9ecef;
+
+/* Use Bootstrap color-mode via data-bs-theme, but keep a few component mappings */
+.navbar {
+  background-color: var(--bs-card-bg) !important;
 }
-.theme-dark .navbar {
-  background-color: #212529 !important;
-}
-/* Dark styles for modal elements so modals match theme */
-.theme-dark .modal-backdrop,
-.theme-dark .modal {
+.modal-backdrop,
+.modal {
   background-color: rgba(0, 0, 0, 0.6);
 }
-.theme-dark .modal-content,
-.theme-dark .card,
-.theme-dark .card-body,
-.theme-dark .card-header,
-.theme-dark .list-group-item,
-.theme-dark .dropdown-menu {
-  background-color: #1e1e1e;
-  color: #e9ecef;
-  border-color: #2b2b2b;
+.modal-content,
+.card,
+.card-body,
+.card-header,
+.list-group-item,
+.dropdown-menu {
+  background-color: var(--bs-card-bg);
+  color: var(--bs-card-color);
+  border-color: var(--bs-border-color);
 }
-.theme-dark .modal .btn,
-.theme-dark .btn {
-  color: #e9ecef;
+.modal .btn,
+.btn {
+  color: var(--bs-card-color);
 }
-.theme-dark .badge.bg-danger {
-  background-color: #c0392b;
+.badge.bg-danger {
+  background-color: var(--bs-badge-danger-bg) !important;
 }
-.theme-dark input.form-control,
-.theme-dark textarea.form-control {
-  background-color: #2a2a2a;
-  color: #e9ecef;
-  border-color: #3a3a3a;
+input.form-control,
+textarea.form-control {
+  background-color: var(--bs-input-bg);
+  color: var(--bs-input-color);
+  border-color: var(--bs-border-color);
+}
+
+.global-busy-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.65);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.global-busy-overlay .busy-content {
+  text-align: center;
 }
 </style>

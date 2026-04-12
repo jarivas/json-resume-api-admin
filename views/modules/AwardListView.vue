@@ -8,17 +8,15 @@
     <div v-else-if="store.error" class="alert alert-danger">{{ store.error }}</div>
     <table v-else-if="store.items.length" class="table table-bordered">
       <thead>
-        <tr>
-          <th>{{ $t('common.id') }}</th>
-          <th>{{ $t('form.name') }}</th>
-          <th>{{ $t('common.actions') }}</th>
-        </tr>
+          <tr>
+            <th>{{ $t('form.name') }}</th>
+            <th>{{ $t('common.actions') }}</th>
+          </tr>
       </thead>
       <tbody>
-        <tr v-for="item in store.items" :key="item.id">
-          <td>{{ item.id }}</td>
-          <td>{{ item.title || item.name }}</td>
-          <td>
+          <tr v-for="item in store.items" :key="item.id">
+            <td>{{ item.title || item.name }}</td>
+            <td>
             <button class="btn btn-sm btn-secondary" @click="editAward(item)" :disabled="ui.busy">
               {{ $t('common.edit') }}
             </button>

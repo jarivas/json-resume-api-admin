@@ -11,6 +11,8 @@
     "spanish": "Español",
     "english": "Inglés",
     "brand": "Panel",
+    "importResume": "Importar currículum",
+    "importResumeShort": "Importar CV",
     "add": "Añadir",
     "upload": "Cargar JSON/Resume...",
     "seed": "Cargar datos de ejemplo",
@@ -49,7 +51,26 @@
     "position": "Puesto",
     "startDate": "Fecha inicio",
     "endDate": "Fecha fin",
-    "reset": "Restablecer"
+    "reset": "Restablecer",
+    "importUrl": "Importar desde URL",
+    "importFile": "Importar desde archivo",
+    "importUrlHelp": "Pega una URL pública a un PDF o currículum; extraeremos los registros de educación relevantes.",
+    "importFileHelp": "Sube un PDF o imagen (se recomienda PDF). El sistema intentará extraer datos de educación/certificados."
+    ,
+    "institution": "Institución",
+    "area": "Área",
+    "studyType": "Tipo de estudio",
+    "score": "Puntuación",
+    "courses": "Cursos",
+    "description": "Descripción",
+    "publisher": "Editor",
+    "releaseDate": "Fecha de publicación",
+    "keywords": "Palabras clave",
+    "highlights": "Puntos destacados"
+  },
+  "errors": {
+    "fileTooLarge": "El fichero es demasiado grande (máx. {max}).",
+    "invalidFileType": "Tipo de fichero no válido. Permitidos: PDF, PNG, JPG, JPEG."
   },
   "education": {
     "title": "Educación"
@@ -101,6 +122,9 @@
     "syncSuccess": "Sincronización completada. Creado: {created}",
     "markAll": "Marcar todas leídas",
     "noNotifications": "No hay notificaciones"
+  },
+  "messages": {
+    "importInProgress": "El proceso de importación puede tardar varios minutos. Por favor espere."
   },
   "interest": {
     "title": "Intereses"

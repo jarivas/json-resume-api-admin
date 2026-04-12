@@ -10,14 +10,12 @@ onMounted(fetchAll)
     <table v-else-if="store.items.length" class="table table-bordered">
       <thead>
         <tr>
-          <th>{{ $t('common.id') }}</th>
           <th>{{ $t('form.name') }}</th>
           <th>{{ $t('common.actions') }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in store.items" :key="item.id">
-          <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td>
             <button class="btn btn-sm btn-secondary" @click="editItem(item)" :disabled="ui.busy">

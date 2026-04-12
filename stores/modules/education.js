@@ -48,6 +48,42 @@ export function createEducationStore(api = defaultApi) {
           this.error = e.response?.data?.message ?? null;
         }
       },
+      async importFromUrl(url) {
+        try {
+          // prefer documented import endpoint
+          await api.post('/import/education', { url });
+          await this.fetchAll();
+          this.error = null;
+        } catch (e) {
+          // fallback to generic resume import endpoint
+          try {
+            await api.post('/import/resume', { url });
+            await this.fetchAll();
+            this.error = null;
+          } catch (err) {
+            this.error = e.response?.data?.message ?? err.response?.data?.message ?? null;
+          }
+        }
+      },
+      async importFile(file) {
+        try {
+          const fd = new FormData();
+          fd.append('file', file);
+          await api.post('/import/education', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+          await this.fetchAll();
+          this.error = null;
+        } catch (e) {
+          try {
+            const fd = new FormData();
+            fd.append('file', file);
+            await api.post('/import/resume', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+            await this.fetchAll();
+            this.error = null;
+          } catch (err) {
+            this.error = e.response?.data?.message ?? err.response?.data?.message ?? null;
+          }
+        }
+      },
     },
   });
 }

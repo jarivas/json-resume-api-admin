@@ -7,6 +7,7 @@
         class="form-control"
         :class="{ 'is-invalid': submitted && !form.name }"
         required
+        placeholder="Philosophy"
         :disabled="busy"
       />
       <div v-if="submitted && !form.name" class="invalid-feedback">

@@ -11,6 +11,8 @@
     "spanish": "Spanish",
     "english": "English",
     "brand": "Dashboard",
+    "importResume": "Import resume",
+    "importResumeShort": "Import CV",
     "add": "Add",
     "upload": "Upload JSON/Resume...",
     "seed": "Load sample data",
@@ -50,7 +52,26 @@
     "position": "Position",
     "startDate": "Start date",
     "endDate": "End date",
-    "reset": "Reset"
+    "reset": "Reset",
+    "importUrl": "Import from URL",
+    "importFile": "Import from file",
+    "importUrlHelp": "Paste a public URL to a PDF or resume; we will extract relevant education records.",
+    "importFileHelp": "Upload a PDF or image (PDF preferred). The system will attempt to extract education/certificate data."
+    ,
+    "institution": "Institution",
+    "area": "Area",
+    "studyType": "Study Type",
+    "score": "Score",
+    "courses": "Courses",
+    "description": "Description",
+    "publisher": "Publisher",
+    "releaseDate": "Release date",
+    "keywords": "Keywords",
+    "highlights": "Highlights"
+  },
+  "errors": {
+    "fileTooLarge": "File is too large (max {max}).",
+    "invalidFileType": "Invalid file type. Allowed: PDF, PNG, JPG, JPEG."
   },
   "education": {
     "title": "Education"
@@ -102,6 +123,9 @@
     "syncSuccess": "Sync completed. Created: {created}",
     "markAll": "Mark all read",
     "noNotifications": "No notifications"
+  },
+  "messages": {
+    "importInProgress": "The import process can take several minutes. Please wait."
   },
   "interest": {
     "title": "Interests"

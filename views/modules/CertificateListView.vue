@@ -1,55 +1,47 @@
-onMounted(fetchAll)
 <template>
   <div class="container py-4">
     <h2>{{ $t('certificate.title') }}</h2>
     <button class="btn btn-primary mb-3" @click="openCreate" :disabled="ui.busy">
       {{ $t('common.create') }}
     </button>
+    <div class="mb-3">
+      <div class="input-group">
+        <input v-model="importUrl" type="url" class="form-control" placeholder="http://example.com/cert.pdf" :disabled="ui.busy || importing" :aria-label="$t('form.importUrl')" />
+        <button class="btn btn-outline-primary" type="button" @click="handleImportUrl" :disabled="!importUrl || ui.busy || importing" :aria-label="$t('form.importUrl')">{{ $t('form.importUrl') }}</button>
+      </div>
+      <small class="form-text text-muted">{{ $t('form.importUrlHelp') }}</small>
+      <div class="input-group mt-2">
+        <input ref="fileInput" type="file" class="form-control" @change="handleFileChange" :disabled="ui.busy || importing" accept=".pdf,image/png,image/jpeg" :aria-label="$t('form.importFile')" />
+        <button class="btn btn-outline-primary" type="button" @click="handleImportFile" :disabled="!selectedFile || ui.busy || importing" :aria-label="$t('form.importFile')">{{ $t('form.importFile') }}</button>
+      </div>
+      <small class="form-text text-muted">{{ $t('form.importFileHelp') }}</small>
+      <div v-if="importError" class="text-danger small mt-1">{{ importError }}</div>
+      <div v-if="importSuccess" class="text-success small mt-1">{{ importSuccess }}</div>
+    </div>
     <div v-if="store.loading" class="alert alert-info">{{ $t('common.loading') }}</div>
     <div v-else-if="store.error" class="alert alert-danger">{{ store.error }}</div>
     <table v-else-if="store.items.length" class="table table-bordered">
       <thead>
         <tr>
-          <th>{{ $t('common.id') }}</th>
           <th>{{ $t('form.name') }}</th>
           <th>{{ $t('common.actions') }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in store.items" :key="item.id">
-          <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td>
-            <button class="btn btn-sm btn-secondary" @click="editItem(item)" :disabled="ui.busy">
-              {{ $t('common.edit') }}
-            </button>
-            <button
-              class="btn btn-sm btn-danger ms-2"
-              @click="deleteItem(item.id)"
-              :disabled="ui.busy"
-            >
-              {{ $t('common.delete') }}
-            </button>
+            <button class="btn btn-sm btn-secondary" @click="editItem(item)" :disabled="ui.busy">{{ $t('common.edit') }}</button>
+            <button class="btn btn-sm btn-danger ms-2" @click="deleteItem(item.id)" :disabled="ui.busy">{{ $t('common.delete') }}</button>
           </td>
         </tr>
       </tbody>
     </table>
     <div v-else>{{ $t('common.noData') }}</div>
 
-    <AddModal
-      :show="showModal"
-      :addingModule="modalLabel"
-      :value="formModel"
-      @close="closeModal"
-      @save="onSave"
-    >
+    <AddModal :show="showModal" :addingModule="modalLabel" :value="formModel" @close="closeModal" @save="onSave">
       <template #body>
-        <CertificateForm
-          :modelValue="formModel"
-          :busy="ui.busy"
-          @submit="onSave"
-          @cancel="closeModal"
-        />
+        <CertificateForm :modelValue="formModel" :busy="ui.busy" @submit="onSave" @cancel="closeModal" />
       </template>
     </AddModal>
   </div>
@@ -63,6 +55,12 @@ import CertificateForm from './CertificateForm.vue'
 import { useUIStore } from '../../stores/ui'
 
 const store = useCertificateStore()
+const importUrl = ref('')
+const selectedFile = ref(null)
+const importing = ref(false)
+const importError = ref(null)
+const importSuccess = ref(null)
+const fileInput = ref(null)
 const showModal = ref(false)
 const formModel = ref(null)
 const editingId = ref(null)
@@ -105,6 +103,64 @@ async function deleteItem(id) {
   try {
     await store.remove(id)
   } finally {
+    ui.setBusy(false)
+  }
+}
+
+function handleFileChange(e) {
+  const f = e.target.files && e.target.files[0]
+  selectedFile.value = f || null
+}
+
+function validateFile(file) {
+  if (!file) return { ok: false, msg: 'No file' }
+  const allowed = ['application/pdf', 'image/png', 'image/jpeg']
+  if (!allowed.includes(file.type)) return { ok: false, msg: 'Invalid file type' }
+  const max = 10 * 1024 * 1024
+  if (file.size > max) return { ok: false, msg: 'File too large' }
+  return { ok: true }
+}
+
+async function handleImportUrl() {
+  if (!importUrl.value) return
+  importing.value = true
+  importError.value = null
+  importSuccess.value = null
+  ui.setBusy(true)
+  try {
+    await store.importFromUrl(importUrl.value)
+    importSuccess.value = 'Imported successfully'
+    await store.fetchAll()
+    importUrl.value = ''
+  } catch (e) {
+    importError.value = e?.response?.data?.message || e?.message || 'Import failed'
+  } finally {
+    importing.value = false
+    ui.setBusy(false)
+  }
+}
+
+async function handleImportFile() {
+  if (!selectedFile.value) return
+  const v = validateFile(selectedFile.value)
+  if (!v.ok) {
+    importError.value = v.msg
+    return
+  }
+  importing.value = true
+  importError.value = null
+  importSuccess.value = null
+  ui.setBusy(true)
+  try {
+    await store.importFile(selectedFile.value)
+    importSuccess.value = 'Imported successfully'
+    await store.fetchAll()
+    selectedFile.value = null
+    if (fileInput.value) fileInput.value.value = null
+  } catch (e) {
+    importError.value = e?.response?.data?.message || e?.message || 'Import failed'
+  } finally {
+    importing.value = false
     ui.setBusy(false)
   }
 }
