@@ -88,8 +88,27 @@ function editItem(item) {
 async function onSave(payload) {
   ui.setBusy(true)
   try {
-    if (editingId.value) await store.update(editingId.value, payload)
-    else await store.create(payload)
+    const sendPayload = { ...payload }
+    if (Array.isArray(sendPayload.roles)) {
+      sendPayload.roles = sendPayload.roles
+        .map((r) => (typeof r === 'string' ? r : r?.name || ''))
+        .map((s) => (s || '').toString().trim())
+        .filter(Boolean)
+    }
+    if (Array.isArray(sendPayload.highlights)) {
+      sendPayload.highlights = sendPayload.highlights
+        .map((h) => (typeof h === 'string' ? h : h?.name || ''))
+        .map((s) => (s || '').toString().trim())
+        .filter(Boolean)
+    }
+    if (Array.isArray(sendPayload.keywords)) {
+      sendPayload.keywords = sendPayload.keywords
+        .map((k) => (typeof k === 'string' ? k : k?.name || ''))
+        .map((s) => (s || '').toString().trim())
+        .filter(Boolean)
+    }
+    if (editingId.value) await store.update(editingId.value, sendPayload)
+    else await store.create(sendPayload)
     showModal.value = false
   } finally {
     ui.setBusy(false)

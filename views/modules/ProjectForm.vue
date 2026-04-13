@@ -128,7 +128,11 @@ watch(
         ...val,
         keywords: Array.isArray(val.keywords) ? val.keywords.slice() : form.value.keywords,
         highlights: Array.isArray(val.highlights) ? val.highlights.slice() : form.value.highlights,
-        roles: Array.isArray(val.roles) ? val.roles.slice() : Array.isArray(val.roles) ? val.roles : form.value.roles,
+        roles: Array.isArray(val.roles)
+          ? val.roles.slice()
+          : typeof val.roles === 'string'
+          ? val.roles.split(',').map((s) => s.toString().trim()).filter(Boolean)
+          : form.value.roles,
       }
     else
       form.value = { name: '', description: '', url: '', roles: [], highlights: [], keywords: [], startDate: '', endDate: '' }
