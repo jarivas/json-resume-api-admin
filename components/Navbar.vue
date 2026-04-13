@@ -63,7 +63,7 @@
             <div class="btn-group" role="group" aria-label="Language selector">
               <button
                 type="button"
-                class="btn btn-outline-secondary btn-sm d-flex align-items-center"
+                class="btn btn-outline-light btn-sm d-flex align-items-center"
                 :class="{ active: locale === 'es' }"
                 @click.prevent="handleSetLocale('es')"
                 title="Español"
@@ -73,7 +73,7 @@
               </button>
               <button
                 type="button"
-                class="btn btn-outline-secondary btn-sm d-flex align-items-center"
+                class="btn btn-outline-light btn-sm d-flex align-items-center"
                 :class="{ active: locale === 'en' }"
                 @click.prevent="handleSetLocale('en')"
                 title="English"
@@ -89,7 +89,7 @@
           <li class="nav-item me-2 d-flex align-items-center">
             <div class="d-flex align-items-center">
               <button
-                class="btn btn-outline-secondary btn-sm me-2"
+                class="btn btn-outline-light btn-sm me-2"
                 @click="handleThemeToggle"
                 :title="$t('navbar.theme') || 'Theme'"
               >
@@ -97,7 +97,7 @@
                 <i v-else class="bi bi-sun-fill" aria-hidden="true"></i>
               </button>
               <button
-                class="btn btn-outline-secondary btn-sm me-2 d-flex align-items-center"
+                class="btn btn-outline-light btn-sm me-2 d-flex align-items-center"
                 @click="handleTriggerResume"
                 :title="$t('navbar.importResume') || 'Importar CV'"
               >
@@ -105,7 +105,7 @@
                 {{ $t('navbar.importResumeShort') || 'Importar CV' }}
               </button>
               <button
-                class="btn btn-outline-secondary btn-sm position-relative"
+                class="btn btn-outline-light btn-sm position-relative"
                 @click="handleSyncToggle"
                 aria-label="Notificaciones"
               >
