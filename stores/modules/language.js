@@ -12,8 +12,12 @@ export const useLanguageStore = defineStore('language', {
       this.loading = true;
       this.error = null;
       try {
-        const response = await api.get('/language');
-        this.items = response.data;
+        const response = await api.get('/iso/language');
+        // map iso language payload to store shape { id, name }
+        this.items = (response.data || []).map((it) => ({
+          id: it.id,
+          name: (it.name && (it.name.en || it.name.en === '' ? it.name.en : null)) || it.native_name || it.id,
+        }));
       } catch (e) {
         this.error = e.response?.data?.message || e.message;
       } finally {

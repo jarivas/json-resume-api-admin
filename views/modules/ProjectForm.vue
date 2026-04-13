@@ -46,6 +46,30 @@
       />
     </div>
 
+    <div class="mb-3">
+      <label class="form-label">{{ $t('form.highlights') }}</label>
+      <input
+        v-model="form.highlights"
+        class="form-control"
+        placeholder="Feature A, Feature B (comma separated)"
+        :disabled="busy"
+      />
+    </div>
+
+    <h5 class="mt-3">{{ $t('form.keywords') }}</h5>
+    <div v-for="(k, idx) in form.keywords" :key="idx" class="mb-2 border rounded p-2">
+      <div class="mb-2">
+        <label class="form-label">{{ $t('form.keywords') }} {{ idx + 1 }}</label>
+        <input v-model="form.keywords[idx]" class="form-control" :disabled="busy" />
+      </div>
+      <div class="text-end">
+        <button type="button" class="btn btn-sm btn-danger" @click="removeKeyword(idx)">Remove</button>
+      </div>
+    </div>
+    <div class="mb-3">
+      <button type="button" class="btn btn-sm btn-outline-primary" @click="addKeyword">Add keyword</button>
+    </div>
+
     <div class="row">
       <div class="col-md-6 mb-3">
         <label class="form-label">{{ $t('form.startDate') }}</label>
@@ -83,15 +107,15 @@ const props = defineProps({
   busy: { type: Boolean, default: false },
 })
 const emit = defineEmits(['submit', 'cancel'])
-const form = ref({ name: '', description: '', url: '', roles: '', startDate: '', endDate: '' })
+const form = ref({ name: '', description: '', url: '', roles: '', highlights: '', keywords: [], startDate: '', endDate: '' })
 const submitted = ref(false)
 const busy = props.busy
 
 watch(
   () => props.modelValue,
   (val) => {
-    if (val) form.value = { ...form.value, ...val }
-    else form.value = { name: '', description: '', url: '', roles: '', startDate: '', endDate: '' }
+    if (val) form.value = { ...form.value, ...val, keywords: Array.isArray(val.keywords) ? val.keywords.slice() : form.value.keywords }
+    else form.value = { name: '', description: '', url: '', roles: '', highlights: '', keywords: [], startDate: '', endDate: '' }
   },
   { immediate: true }
 )
@@ -107,6 +131,23 @@ function onSubmit() {
         .map((s) => s.trim())
         .filter(Boolean)
     : []
+  payload.highlights = payload.highlights
+    ? payload.highlights
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : []
+  payload.keywords = Array.isArray(payload.keywords)
+    ? payload.keywords.map((s) => (s || '').toString().trim()).filter(Boolean)
+    : []
   emit('submit', payload)
+}
+
+function addKeyword() {
+  form.value.keywords.push('')
+}
+
+function removeKeyword(idx) {
+  form.value.keywords.splice(idx, 1)
 }
 </script>

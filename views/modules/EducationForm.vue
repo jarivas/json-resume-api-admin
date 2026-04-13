@@ -22,6 +22,21 @@
     </div>
 
     <div class="mb-3">
+      <label class="form-label">{{ $t('form.url') }}</label>
+      <input
+        v-model="form.url"
+        class="form-control"
+        placeholder="http://example.com"
+        :class="{ 'is-invalid': submitted && form.url && !validUrl }"
+        :disabled="busy"
+        type="url"
+      />
+      <div v-if="submitted && form.url && !validUrl" class="invalid-feedback">
+        {{ $t('form.invalidUrl') }}
+      </div>
+    </div>
+
+    <div class="mb-3">
       <label class="form-label">{{ $t('form.studyType') }}</label>
       <input
         v-model="form.studyType"
@@ -69,6 +84,14 @@
       ></textarea>
     </div>
 
+    <div class="mb-3">
+      <label class="form-label">{{ $t('form.summary') }}</label>
+      <textarea v-model="form.summary" class="form-control" :class="{ 'is-invalid': submitted && !form.summary }" :disabled="busy"></textarea>
+      <div v-if="submitted && !form.summary" class="invalid-feedback">
+        {{ $t('form.required', { field: $t('form.summary') }) }}
+      </div>
+    </div>
+
     <button type="submit" class="btn btn-primary" :disabled="busy">{{ $t('form.save') }}</button>
     <button type="button" class="btn btn-secondary ms-2" @click="$emit('cancel')" :disabled="busy">
       {{ $t('form.cancel') }}
@@ -77,7 +100,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useEducationStore } from '../../stores/modules/education'
 const props = defineProps({ modelValue: Object, busy: { type: Boolean, default: false } })
 const emit = defineEmits(['submit', 'cancel', 'imported'])
@@ -90,6 +113,7 @@ const form = ref({
   endDate: '',
   score: '',
   courses: '',
+  summary: '',
 })
 const submitted = ref(false)
 
@@ -118,7 +142,7 @@ watch(
 function onSubmit() {
   if (props.busy) return
   submitted.value = true
-  if (!form.value.institution) return
+  if (!form.value.institution || !form.value.summary) return
   const payload = { ...form.value }
   payload.courses = payload.courses
     ? payload.courses
@@ -128,6 +152,16 @@ function onSubmit() {
     : []
   emit('submit', payload)
 }
+
+const validUrl = computed(() => {
+  if (!form.value.url) return false
+  try {
+    const u = new URL(form.value.url)
+    return u.protocol === 'http:' || u.protocol === 'https:'
+  } catch (e) {
+    return false
+  }
+})
 
 // import handler removed
 

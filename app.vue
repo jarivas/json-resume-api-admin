@@ -4,9 +4,9 @@
       <div class="busy-content text-center">
         <div class="spinner-border text-light" role="status" aria-hidden="true"></div>
         <div class="mt-3">
-          <strong>{{ $t('navbar.importResume') || 'Importando...' }}</strong>
+          <strong>{{ $t('common.loading') || 'Procesando...' }}</strong>
         </div>
-        <div class="mt-1 small">{{ $t('messages.importInProgress') || 'El proceso de importación puede tardar varios minutos. Por favor espere.' }}</div>
+        <div class="mt-1 small">&nbsp;</div>
       </div>
     </div>
     <Navbar

@@ -10,13 +10,22 @@ onMounted(fetchAll)
     <table v-else-if="store.items.length" class="table table-bordered">
       <thead>
         <tr>
-          <th>{{ $t('form.name') }}</th>
+          <th>{{ $t('form.organization') }}</th>
+          <th>{{ $t('form.position') }}</th>
+          <th>{{ $t('form.highlights') }}</th>
           <th>{{ $t('common.actions') }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in store.items" :key="item.id">
-          <td>{{ item.name }}</td>
+          <td>{{ item.organization || '-' }}</td>
+          <td>{{ item.position || '-' }}</td>
+          <td>
+            <ul v-if="item.highlights && item.highlights.length" class="mb-0">
+              <li v-for="(h, idx) in item.highlights" :key="idx">{{ h }}</li>
+            </ul>
+            <span v-else>-</span>
+          </td>
           <td>
             <button class="btn btn-sm btn-secondary" @click="editItem(item)" :disabled="ui.busy">
               {{ $t('common.edit') }}
@@ -71,7 +80,7 @@ onMounted(() => store.fetchAll())
 
 function openCreate() {
   editingId.value = null
-  formModel.value = { name: '' }
+  formModel.value = { organization: '', position: '', url: '', startDate: '', endDate: '', summary: '', highlights: [] }
   modalLabel.value = 'volunteer'
   showModal.value = true
 }

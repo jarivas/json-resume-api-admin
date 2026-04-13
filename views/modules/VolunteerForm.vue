@@ -49,6 +49,24 @@
       <textarea v-model="form.summary" class="form-control" :disabled="busy"></textarea>
     </div>
 
+    <h5 class="mt-3">{{ $t('form.highlights') }}</h5>
+    <div v-for="(h, idx) in form.highlights" :key="idx" class="mb-2 border rounded p-2">
+      <div class="mb-2">
+        <label class="form-label">{{ $t('form.highlights') }} {{ idx + 1 }}</label>
+        <input v-model="form.highlights[idx]" class="form-control" :disabled="busy" />
+      </div>
+      <div class="text-end">
+        <button type="button" class="btn btn-sm btn-danger" @click="removeHighlight(idx)">
+          Remove
+        </button>
+      </div>
+    </div>
+    <div class="mb-3">
+      <button type="button" class="btn btn-sm btn-outline-primary" @click="addHighlight">
+        Add highlight
+      </button>
+    </div>
+
     <button type="submit" class="btn btn-primary" :disabled="busy">{{ $t('form.save') }}</button>
     <button type="button" class="btn btn-secondary ms-2" @click="$emit('cancel')" :disabled="busy">
       {{ $t('form.cancel') }}
@@ -70,13 +88,19 @@ const form = ref({
   startDate: '',
   endDate: '',
   summary: '',
+  highlights: [],
 })
 const submitted = ref(false)
 
 watch(
   () => props.modelValue,
   (val) => {
-    if (val) form.value = { ...form.value, ...val }
+    if (val)
+      form.value = {
+        ...form.value,
+        ...val,
+        highlights: Array.isArray(val.highlights) ? val.highlights.slice() : form.value.highlights,
+      }
     else
       form.value = {
         organization: '',
@@ -85,6 +109,7 @@ watch(
         startDate: '',
         endDate: '',
         summary: '',
+        highlights: [],
       }
   },
   { immediate: true }
@@ -94,6 +119,18 @@ function onSubmit() {
   if (props.busy) return
   submitted.value = true
   if (!form.value.organization || !form.value.position) return
-  emit('submit', { ...form.value })
+  const payload = { ...form.value }
+  payload.highlights = Array.isArray(payload.highlights)
+    ? payload.highlights.map((s) => (s || '').toString().trim()).filter(Boolean)
+    : []
+  emit('submit', payload)
+}
+
+function addHighlight() {
+  form.value.highlights.push('')
+}
+
+function removeHighlight(idx) {
+  form.value.highlights.splice(idx, 1)
 }
 </script>

@@ -94,8 +94,13 @@ watch(
 )
 
 const validUrl = computed(() => {
-  // Simple URL regex
-  return /^(https?:\/\/)?([\w\d-]+\.)+[\w\d-]+(\/.*)?$/.test(form.value.url)
+  if (!form.value.url) return false
+  try {
+    const u = new URL(form.value.url)
+    return u.protocol === 'http:' || u.protocol === 'https:'
+  } catch (e) {
+    return false
+  }
 })
 
 function onSubmit() {

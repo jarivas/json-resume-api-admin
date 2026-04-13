@@ -66,7 +66,8 @@
     "publisher": "Editor",
     "releaseDate": "Fecha de publicación",
     "keywords": "Palabras clave",
-    "highlights": "Puntos destacados"
+    "highlights": "Puntos destacados",
+    "roles": "Funciones"
   },
   "errors": {
     "fileTooLarge": "El fichero es demasiado grande (máx. {max}).",

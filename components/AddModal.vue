@@ -4,7 +4,7 @@
     class="modal-backdrop d-flex align-items-center justify-content-center"
     style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1050"
   >
-    <div class="card p-3" style="width: 420px">
+    <div class="card p-3 modal-card">
       <div class="card-header d-flex justify-content-between align-items-center">
         <strong>Añadir {{ addingModule }}</strong>
         <button class="btn-close" @click="$emit('close')"></button>
@@ -49,5 +49,15 @@ function onSave() {
 <style scoped>
 .card {
   max-width: 95%;
+}
+.modal-card {
+  width: 90%;
+  max-width: 720px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+.card-body {
+  overflow: auto;
 }
 </style>

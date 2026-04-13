@@ -67,7 +67,8 @@
     "publisher": "Publisher",
     "releaseDate": "Release date",
     "keywords": "Keywords",
-    "highlights": "Highlights"
+    "highlights": "Highlights",
+    "roles": "Roles"
   },
   "errors": {
     "fileTooLarge": "File is too large (max {max}).",
