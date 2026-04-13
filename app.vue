@@ -304,7 +304,16 @@ async function loadLocalStorageAtStartup() {
       const useStoreFn = findUseStore(mod, key)
       if (!useStoreFn) continue
       const store = useStoreFn()
-      store.items = Array.isArray(data) ? data : []
+      let items = Array.isArray(data) ? data : []
+      if (key === 'language' && Array.isArray(items)) {
+        items = items.map((it) => {
+          if (!it) return { language: '', fluency: '' }
+          if (it.language || it.fluency) return it
+          const languageVal = it.name || it.id || it.language || ''
+          return { language: languageVal, fluency: it.fluency || '' }
+        })
+      }
+      store.items = items
     } catch (e) {
       // skip
     }
