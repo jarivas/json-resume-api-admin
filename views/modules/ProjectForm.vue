@@ -46,14 +46,18 @@
       />
     </div>
 
+    <h5 class="mt-3">{{ $t('form.highlights') }}</h5>
+    <div v-for="(h, idx) in form.highlights" :key="idx" class="mb-2 border rounded p-2">
+      <div class="mb-2">
+        <label class="form-label">{{ $t('form.highlights') }} {{ idx + 1 }}</label>
+        <input v-model="form.highlights[idx]" class="form-control" :disabled="busy" />
+      </div>
+      <div class="text-end">
+        <button type="button" class="btn btn-sm btn-danger" @click="removeHighlight(idx)">Remove</button>
+      </div>
+    </div>
     <div class="mb-3">
-      <label class="form-label">{{ $t('form.highlights') }}</label>
-      <input
-        v-model="form.highlights"
-        class="form-control"
-        placeholder="Feature A, Feature B (comma separated)"
-        :disabled="busy"
-      />
+      <button type="button" class="btn btn-sm btn-outline-primary" @click="addHighlight">Add highlight</button>
     </div>
 
     <h5 class="mt-3">{{ $t('form.keywords') }}</h5>
@@ -107,7 +111,7 @@ const props = defineProps({
   busy: { type: Boolean, default: false },
 })
 const emit = defineEmits(['submit', 'cancel'])
-const form = ref({ name: '', description: '', url: '', roles: '', highlights: '', keywords: [], startDate: '', endDate: '' })
+const form = ref({ name: '', description: '', url: '', roles: '', highlights: [], keywords: [], startDate: '', endDate: '' })
 const submitted = ref(false)
 const busy = props.busy
 
@@ -115,7 +119,7 @@ watch(
   () => props.modelValue,
   (val) => {
     if (val) form.value = { ...form.value, ...val, keywords: Array.isArray(val.keywords) ? val.keywords.slice() : form.value.keywords }
-    else form.value = { name: '', description: '', url: '', roles: '', highlights: '', keywords: [], startDate: '', endDate: '' }
+    else form.value = { name: '', description: '', url: '', roles: '', highlights: [], keywords: [], startDate: '', endDate: '' }
   },
   { immediate: true }
 )
@@ -131,11 +135,8 @@ function onSubmit() {
         .map((s) => s.trim())
         .filter(Boolean)
     : []
-  payload.highlights = payload.highlights
-    ? payload.highlights
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean)
+  payload.highlights = Array.isArray(payload.highlights)
+    ? payload.highlights.map((s) => (s || '').toString().trim()).filter(Boolean)
     : []
   payload.keywords = Array.isArray(payload.keywords)
     ? payload.keywords.map((s) => (s || '').toString().trim()).filter(Boolean)
@@ -149,5 +150,13 @@ function addKeyword() {
 
 function removeKeyword(idx) {
   form.value.keywords.splice(idx, 1)
+}
+
+function addHighlight() {
+  form.value.highlights.push('')
+}
+
+function removeHighlight(idx) {
+  form.value.highlights.splice(idx, 1)
 }
 </script>
