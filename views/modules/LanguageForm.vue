@@ -2,20 +2,22 @@
   <form @submit.prevent="onSubmit" novalidate>
     <div class="mb-3">
       <label class="form-label">{{ $t('form.language') }}</label>
-      <input
-        v-model="form.language"
-        class="form-control"
-        :class="{ 'is-invalid': submitted && !form.language }"
-        required
-        :disabled="busy"
-      />
-      <div v-if="isoOptions.length" class="mt-2">
-        <label class="form-label small">{{ $t('form.choose') || 'Or choose' }}</label>
+      <template v-if="!isoOptions.length">
+        <input
+          v-model="form.language"
+          class="form-control"
+          :class="{ 'is-invalid': submitted && !form.language }"
+          required
+          :disabled="busy"
+        />
+      </template>
+      <template v-else>
+        <label class="form-label small">{{ $t('form.choose') || 'Choose language' }}</label>
         <select v-model="selectedIso" class="form-select">
           <option value="">-- {{ $t('form.select') || 'Select language' }} --</option>
           <option v-for="opt in isoOptions" :key="opt.id" :value="opt.id">{{ opt.label }}</option>
         </select>
-      </div>
+      </template>
       <div v-if="submitted && !form.language" class="invalid-feedback">
         {{ $t('form.required', { field: $t('form.language') }) }}
       </div>
