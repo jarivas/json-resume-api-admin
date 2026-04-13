@@ -36,14 +36,18 @@
       />
     </div>
 
+    <h5 class="mt-3">{{ $t('form.roles') }}</h5>
+    <div v-for="(r, idx) in form.roles" :key="idx" class="mb-2 border rounded p-2">
+      <div class="mb-2">
+        <label class="form-label">{{ $t('form.roles') }} {{ idx + 1 }}</label>
+        <input v-model="form.roles[idx]" class="form-control" :disabled="busy" />
+      </div>
+      <div class="text-end">
+        <button type="button" class="btn btn-sm btn-danger" @click="removeRole(idx)">Remove</button>
+      </div>
+    </div>
     <div class="mb-3">
-      <label class="form-label">{{ $t('form.roles') }}</label>
-      <input
-        v-model="form.roles"
-        class="form-control"
-        placeholder="Team Lead, Writer (comma separated)"
-        :disabled="busy"
-      />
+      <button type="button" class="btn btn-sm btn-outline-primary" @click="addRole">Add role</button>
     </div>
 
     <h5 class="mt-3">{{ $t('form.highlights') }}</h5>
@@ -111,15 +115,23 @@ const props = defineProps({
   busy: { type: Boolean, default: false },
 })
 const emit = defineEmits(['submit', 'cancel'])
-const form = ref({ name: '', description: '', url: '', roles: '', highlights: [], keywords: [], startDate: '', endDate: '' })
+const form = ref({ name: '', description: '', url: '', roles: [], highlights: [], keywords: [], startDate: '', endDate: '' })
 const submitted = ref(false)
 const busy = props.busy
 
 watch(
   () => props.modelValue,
   (val) => {
-    if (val) form.value = { ...form.value, ...val, keywords: Array.isArray(val.keywords) ? val.keywords.slice() : form.value.keywords }
-    else form.value = { name: '', description: '', url: '', roles: '', highlights: [], keywords: [], startDate: '', endDate: '' }
+    if (val)
+      form.value = {
+        ...form.value,
+        ...val,
+        keywords: Array.isArray(val.keywords) ? val.keywords.slice() : form.value.keywords,
+        highlights: Array.isArray(val.highlights) ? val.highlights.slice() : form.value.highlights,
+        roles: Array.isArray(val.roles) ? val.roles.slice() : Array.isArray(val.roles) ? val.roles : form.value.roles,
+      }
+    else
+      form.value = { name: '', description: '', url: '', roles: [], highlights: [], keywords: [], startDate: '', endDate: '' }
   },
   { immediate: true }
 )
@@ -129,11 +141,8 @@ function onSubmit() {
   submitted.value = true
   if (!form.value.name) return
   const payload = { ...form.value }
-  payload.roles = payload.roles
-    ? payload.roles
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean)
+  payload.roles = Array.isArray(payload.roles)
+    ? payload.roles.map((s) => (s || '').toString().trim()).filter(Boolean)
     : []
   payload.highlights = Array.isArray(payload.highlights)
     ? payload.highlights.map((s) => (s || '').toString().trim()).filter(Boolean)
@@ -158,5 +167,13 @@ function addHighlight() {
 
 function removeHighlight(idx) {
   form.value.highlights.splice(idx, 1)
+}
+
+function addRole() {
+  form.value.roles.push('')
+}
+
+function removeRole(idx) {
+  form.value.roles.splice(idx, 1)
 }
 </script>
