@@ -10,13 +10,15 @@ onMounted(fetchAll)
     <table v-else-if="store.items.length" class="table table-bordered">
       <thead>
         <tr>
-          <th>{{ $t('form.name') }}</th>
+          <th>{{ $t('form.language') }}</th>
+          <th>{{ $t('form.fluency') }}</th>
           <th>{{ $t('common.actions') }}</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in store.items" :key="item.id">
-          <td>{{ item.name }}</td>
+          <td>{{ item.language || item.name || '-' }}</td>
+          <td>{{ item.fluency || '-' }}</td>
           <td>
             <button class="btn btn-sm btn-secondary" @click="editItem(item)" :disabled="ui.busy">
               {{ $t('common.edit') }}
@@ -71,7 +73,7 @@ onMounted(() => store.fetchAll())
 
 function openCreate() {
   editingId.value = null
-  formModel.value = { name: '' }
+  formModel.value = { language: '', fluency: '' }
   modalLabel.value = 'language'
   showModal.value = true
 }
