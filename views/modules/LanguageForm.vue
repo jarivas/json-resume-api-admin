@@ -46,8 +46,10 @@ const selectedIso = ref('')
 watch(
   () => props.modelValue,
   (val) => {
-    if (val) form.value = { ...form.value, ...val }
-    else form.value = { language: '', fluency: '' }
+    if (val) {
+      form.value = { ...form.value, ...val }
+      selectedIso.value = val.language || ''
+    } else form.value = { language: '', fluency: '' }
   },
   { immediate: true }
 )
@@ -56,6 +58,11 @@ onMounted(async () => {
   try {
     const res = await api.get('/iso/language')
     isoOptions.value = (res.data || []).map((it) => ({ id: it.id, label: (it.name && (it.name.en || it.native_name || it.id)) || it.native_name || it.id }))
+    // if editing and the form has a language code, try to select it
+    if (form.value.language) {
+      const found = isoOptions.value.find((o) => o.id === form.value.language)
+      if (found) selectedIso.value = found.id
+    }
   } catch (e) {
     // ignore errors; select will simply not show
   }
