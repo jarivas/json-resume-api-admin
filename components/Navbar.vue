@@ -56,6 +56,9 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/awards">{{ $t('award.title') }}</router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/agent-conversations">{{ $t('agentConversation.title') }}</router-link>
+          </li>
         </ul>
 
         <ul class="navbar-nav ms-auto align-items-center">
