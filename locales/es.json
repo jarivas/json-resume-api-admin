@@ -108,17 +108,6 @@
   "award": {
     "title": "Premios"
   },
-  "common": {
-    "reload": "Recargar",
-    "loading": "Cargando...",
-    "create": "Crear nuevo",
-    "edit": "Editar",
-    "delete": "Eliminar",
-    "reset": "Restablecer",
-    "id": "ID",
-    "actions": "Acciones",
-    "noData": "No hay datos."
-  },
   "notifications": {
     "title": "Notificaciones",
     "syncError": "Sincronización completada. Creado: {created}, Errores: {errors}",
@@ -134,5 +123,52 @@
   },
   "resource": {
     "title": "Recursos"
+  },
+  "chat": {
+    "title": "Chat IA",
+    "placeholder": "Escribe tu mensaje...",
+    "send": "Enviar",
+    "newSession": "Nueva sesión",
+    "empty": "Sin mensajes. Inicia una conversación."
+  },
+  "import": {
+    "title": "Importar datos",
+    "jsonTitle": "Importar JSON Resume",
+    "jsonDesc": "Sube un fichero JSON en formato JSON Resume para importar todos tus datos de currículum.",
+    "resumeTitle": "Importar currículum (PDF/DOC)",
+    "resumeDesc": "Sube un PDF o documento Word para importar los datos del currículum.",
+    "educationTitle": "Importar educación",
+    "educationDesc": "Importa registros de educación desde un fichero o URL.",
+    "certificateTitle": "Importar certificado",
+    "certificateDesc": "Importa registros de certificados desde un fichero o URL.",
+    "upload": "Subir",
+    "success": "Importación correcta."
+  },
+  "aiRequest": {
+    "title": "Historial de solicitudes IA",
+    "request": "Solicitud",
+    "response": "Respuesta",
+    "createdAt": "Creado el"
+  },
+  "agentConversation": {
+    "title": "Conversaciones del agente",
+    "messagesTitle": "Mensajes de la conversación",
+    "createdAt": "Creado el",
+    "viewMessages": "Ver mensajes"
+  },
+  "common": {
+    "reload": "Recargar",
+    "loading": "Cargando...",
+    "create": "Crear nuevo",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "reset": "Restablecer",
+    "id": "ID",
+    "actions": "Acciones",
+    "noData": "No hay datos.",
+    "prev": "Anterior",
+    "next": "Siguiente",
+    "back": "Volver",
+    "or": "o"
   }
 }

@@ -39,4 +39,32 @@ api.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Response interceptor: if a request fails due to authentication, clear auth and
+// redirect to login so the user isn't left on a protected page with an invalid token.
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const status = error.response?.status;
+    if (status === 401 || status === 403) {
+      try {
+        const mod = await import('../stores/auth');
+        const useAuthStore = mod.useAuthStore;
+        const auth = useAuthStore();
+        // Ensure local state is cleared
+        if (auth && typeof auth.logout === 'function') auth.logout();
+      } catch (e) {
+        // ignore
+      }
+      try {
+        const mod = await import('../router');
+        const router = mod.default;
+        if (router && typeof router.push === 'function') router.push('/login');
+      } catch (e) {
+        // ignore
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;

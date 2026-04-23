@@ -7,7 +7,7 @@ vi.mock('../../services/api', () => {
     default: {
       get: async () => {
         console.log('[MOCK API] GET /award', backendAwards);
-        return { data: backendAwards.slice() };
+        return { data: { data: backendAwards.slice() } };
       },
       post: async (url, data) => {
         const newId = backendAwards.length ? Math.max(...backendAwards.map(a => a.id)) + 1 : 1;
@@ -45,7 +45,7 @@ describe('Award Store', () => {
       { id: 1, name: 'Premio Test' },
     ];
     mockApi = {
-      get: async () => ({ data: backendAwards.slice() }),
+      get: async () => ({ data: { data: backendAwards.slice() } }),
       post: async (url, data) => {
         const newId = backendAwards.length ? Math.max(...backendAwards.map(a => a.id)) + 1 : 1;
         const newAward = { id: newId, ...data };

@@ -13,7 +13,7 @@ export const usePublicationStore = defineStore('publication', {
       this.error = null;
       try {
         const response = await api.get('/publication');
-        this.items = response.data;
+        this.items = response.data.data ?? [];
       } catch (e) {
         this.error = e.response?.data?.message || e.message;
       } finally {

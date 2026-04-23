@@ -109,17 +109,6 @@
   "award": {
     "title": "Awards"
   },
-  "common": {
-    "reload": "Reload",
-    "loading": "Loading...",
-    "create": "Create new",
-    "edit": "Edit",
-    "delete": "Delete",
-    "reset": "Reset",
-    "id": "ID",
-    "actions": "Actions",
-    "noData": "No data."
-  },
   "notifications": {
     "title": "Notifications",
     "syncError": "Sync completed. Created: {created}, Errors: {errors}",
@@ -135,5 +124,52 @@
   },
   "resource": {
     "title": "Resources"
+  },
+  "chat": {
+    "title": "AI Chat",
+    "placeholder": "Type your message...",
+    "send": "Send",
+    "newSession": "New session",
+    "empty": "No messages yet. Start a conversation."
+  },
+  "import": {
+    "title": "Import Data",
+    "jsonTitle": "Import JSON Resume",
+    "jsonDesc": "Upload a JSON file in JSON Resume format to import all your resume data.",
+    "resumeTitle": "Import Resume (PDF/DOC)",
+    "resumeDesc": "Upload a PDF or Word document to import your resume data.",
+    "educationTitle": "Import Education",
+    "educationDesc": "Import education records from a file or URL.",
+    "certificateTitle": "Import Certificate",
+    "certificateDesc": "Import certificate records from a file or URL.",
+    "upload": "Upload",
+    "success": "Import successful."
+  },
+  "aiRequest": {
+    "title": "AI Request History",
+    "request": "Request",
+    "response": "Response",
+    "createdAt": "Created at"
+  },
+  "agentConversation": {
+    "title": "Agent Conversations",
+    "messagesTitle": "Conversation Messages",
+    "createdAt": "Created at",
+    "viewMessages": "View messages"
+  },
+  "common": {
+    "reload": "Reload",
+    "loading": "Loading...",
+    "create": "Create new",
+    "edit": "Edit",
+    "delete": "Delete",
+    "reset": "Reset",
+    "id": "ID",
+    "actions": "Actions",
+    "noData": "No data.",
+    "prev": "Previous",
+    "next": "Next",
+    "back": "Back",
+    "or": "or"
   }
 }

@@ -15,11 +15,14 @@ import ReferenceListView from '../views/modules/ReferenceListView.vue';
 import SkillListView from '../views/modules/SkillListView.vue';
 import VolunteerListView from '../views/modules/VolunteerListView.vue';
 import WorkListView from '../views/modules/WorkListView.vue';
+import ChatView from '../views/modules/ChatView.vue';
+import ImportView from '../views/modules/ImportView.vue';
+import AiRequestListView from '../views/modules/AiRequestListView.vue';
+import AgentConversationListView from '../views/modules/AgentConversationListView.vue';
 
 const routes = [
   { path: '/login', name: 'login', component: LoginView },
   { path: '/', redirect: '/awards' },
-  // { path: '/', name: 'resources', component: ResourceListView }, // Eliminado porque la vista ya no existe
   { path: '/awards', name: 'awards', component: AwardListView },
   { path: '/basics', name: 'basics', component: BasicListView },
   { path: '/certificates', name: 'certificates', component: CertificateListView },
@@ -32,6 +35,10 @@ const routes = [
   { path: '/skills', name: 'skills', component: SkillListView },
   { path: '/volunteers', name: 'volunteers', component: VolunteerListView },
   { path: '/work', name: 'work', component: WorkListView },
+  { path: '/chat', name: 'chat', component: ChatView },
+  { path: '/import', name: 'import', component: ImportView },
+  { path: '/ai-requests', name: 'aiRequests', component: AiRequestListView },
+  { path: '/agent-conversations', name: 'agentConversations', component: AgentConversationListView },
 ];
 
 
@@ -57,8 +64,22 @@ router.beforeEach(async (to, from, next) => {
   } catch (e) {
     // ignore store import errors
   }
-  if (to.name !== 'login' && !auth.token) {
-    next({ name: 'login' });
+  if (to.name !== 'login') {
+    if (!auth.token) {
+      return next({ name: 'login' });
+    }
+    // If token is expired or expiring now, attempt a refresh. If refresh fails,
+    // logout will have been called and we should redirect to login.
+    try {
+      if (typeof auth.isTokenExpiringSoon === 'function' && auth.isTokenExpiringSoon(0)) {
+        if (typeof auth.refreshToken === 'function') {
+          await auth.refreshToken();
+        }
+      }
+    } catch (e) {
+      return next({ name: 'login' });
+    }
+    next();
   } else if (to.name === 'login' && auth.token) {
     next({ name: 'awards' }); // Redirige a una ruta existente
   } else {

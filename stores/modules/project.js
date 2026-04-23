@@ -13,7 +13,7 @@ export const useProjectStore = defineStore('project', {
       this.error = null;
       try {
         const response = await api.get('/project');
-        this.items = response.data;
+        this.items = response.data.data ?? [];
       } catch (e) {
         this.error = e.response?.data?.message || e.message;
       } finally {

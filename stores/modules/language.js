@@ -13,7 +13,7 @@ export const useLanguageStore = defineStore('language', {
       this.error = null;
       try {
         const response = await api.get('/language');
-        this.items = response.data;
+        this.items = response.data.data ?? [];
       } catch (e) {
         this.error = e.response?.data?.message || e.message;
       } finally {

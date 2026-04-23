@@ -14,7 +14,7 @@ export function createBasicStore(api = defaultApi) {
         this.error = null;
         try {
           const response = await api.get('/basic');
-          this.item = response.data;
+          this.item = response.data.data?.[0] ?? null;
         } catch (e) {
           this.error = e.response?.data?.message ?? null;
         } finally {

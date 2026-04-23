@@ -14,7 +14,7 @@ export function createEducationStore(api = defaultApi) {
         this.error = null;
         try {
           const response = await api.get('/education');
-          this.items = response.data;
+          this.items = response.data.data ?? [];
         } catch (e) {
           this.error = e.response?.data?.message ?? null;
         } finally {
@@ -50,19 +50,11 @@ export function createEducationStore(api = defaultApi) {
       },
       async importFromUrl(url) {
         try {
-          // prefer documented import endpoint
           await api.post('/import/education', { url });
           await this.fetchAll();
           this.error = null;
         } catch (e) {
-          // fallback to generic resume import endpoint
-          try {
-            await api.post('/import/resume', { url });
-            await this.fetchAll();
-            this.error = null;
-          } catch (err) {
-            this.error = e.response?.data?.message ?? err.response?.data?.message ?? null;
-          }
+          this.error = e.response?.data?.message ?? e.message ?? null;
         }
       },
       async importFile(file) {
@@ -73,15 +65,7 @@ export function createEducationStore(api = defaultApi) {
           await this.fetchAll();
           this.error = null;
         } catch (e) {
-          try {
-            const fd = new FormData();
-            fd.append('file', file);
-            await api.post('/import/resume', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
-            await this.fetchAll();
-            this.error = null;
-          } catch (err) {
-            this.error = e.response?.data?.message ?? err.response?.data?.message ?? null;
-          }
+          this.error = e.response?.data?.message ?? e.message ?? null;
         }
       },
     },

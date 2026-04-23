@@ -29,7 +29,6 @@ describe('Education store import actions', () => {
   it('falls back to /import/resume when /education/import fails', async () => {
     apiMock.post.mockImplementation((path, data) => {
       if (path === '/import/education') return Promise.reject({ response: { data: { message: 'not found' } } })
-      if (path === '/import/resume') return Promise.resolve({})
       return Promise.reject(new Error('unexpected'))
     })
 
@@ -39,7 +38,7 @@ describe('Education store import actions', () => {
     await store.importFromUrl('http://example.com/resume.pdf')
 
     expect(apiMock.post).toHaveBeenCalledWith('/import/education', { url: 'http://example.com/resume.pdf' })
-    expect(apiMock.post).toHaveBeenCalledWith('/import/resume', { url: 'http://example.com/resume.pdf' })
+    expect(apiMock.post).not.toHaveBeenCalledWith('/import/resume', { url: 'http://example.com/resume.pdf' })
   })
 
   it('uploads file to /education/import as multipart/form-data', async () => {

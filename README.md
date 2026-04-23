@@ -1,5 +1,13 @@
 # Vue 3 + Pinia + Vite Dev Container
 
+## Descripción del proyecto
+
+Frontend construido con Vue 3, Pinia y Vite para editar y mostrar currículums en formato JSON Resume. Proporciona vistas y componentes modulares para gestionar secciones del CV (experiencia, educación, proyectos, habilidades, idiomas, etc.) y una UI preparada para desarrollo colaborativo en contenedores.
+
+Este proyecto depende del backend json-resume-api para el almacenamiento y las operaciones CRUD sobre los datos del currículum. Más información y el código del backend en: https://github.com/jarivas/json-resume-api
+
+Este repositorio actúa como cliente web que consume esa API; asegúrate de desplegar o apuntar a `json-resume-api` al configurar el entorno.
+
 Este proyecto está listo para desarrollo colaborativo usando Dev Containers en VS Code. Incluye configuración estándar de ESLint y Prettier para Vue 3, y scripts para lint, test y build.
 
 ## Requisitos
