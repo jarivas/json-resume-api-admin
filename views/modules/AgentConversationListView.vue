@@ -96,12 +96,37 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { useAgentConversationStore } from '../../stores/modules/agentConversation'
 
-const store = useAgentConversationStore()
+// Load the store dynamically to avoid Vite warning when the same module
+// is also dynamically imported elsewhere (e.g. app.vue).
+const fallbackStore = {
+  conversations: [],
+  currentPage: 1,
+  lastPage: 1,
+  total: 0,
+  messages: [],
+  messagesPage: 1,
+  messagesLastPage: 1,
+  loading: false,
+  error: null,
+  fetchPage: () => {},
+  fetchMessages: () => {},
+}
+
+const store = ref(fallbackStore)
 const selectedConversation = ref(null)
 
-onMounted(() => store.fetchPage(1))
+onMounted(async () => {
+  try {
+    const mod = await import('../../stores/modules/agentConversation')
+    const useAgentConversationStore = mod.useAgentConversationStore
+    const s = useAgentConversationStore()
+    store.value = s
+    if (typeof s.fetchPage === 'function') s.fetchPage(1)
+  } catch (e) {
+    // keep fallback
+  }
+})
 
 function changePage(page) {
   if (page < 1 || page > store.lastPage) return

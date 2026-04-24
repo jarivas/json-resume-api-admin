@@ -129,7 +129,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
 import { useUIStore } from '../stores/ui'
 const props = defineProps({
   locale: { type: String, default: 'es' },

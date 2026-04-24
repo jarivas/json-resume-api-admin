@@ -10,31 +10,16 @@ const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   try {
-    const mod = await import('../stores/auth');
-    const useAuthStore = mod.useAuthStore;
-    const auth = useAuthStore();
-    // Don't try to refresh while calling auth endpoints to avoid recursion
-    const url = config.url || '';
-    const isAuthEndpoint = url.includes('/authentication/refresh') || url.includes('/authentication/refresh-token') || url.includes('/authentication/login');
-    if (!isAuthEndpoint) {
-      try {
-        if (auth && typeof auth.isTokenExpiringSoon === 'function' && auth.isTokenExpiringSoon(30)) {
-          // attempt a refresh before the request if token is about to expire
-          if (typeof auth.refreshToken === 'function') {
-            await auth.refreshToken();
-          }
-        }
-      } catch (e) {
-        // ignore refresh errors here; request will proceed and likely fail with 401
-      }
-    }
-
-    if (auth?.token) {
+    // Avoid importing the auth store here to prevent circular dependencies
+    // and Vite static/dynamic import warnings. Read token directly from
+    // localStorage which `useAuthStore` also persists to.
+    const token = (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function') ? localStorage.getItem('token') : null;
+    if (token) {
       config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${auth.token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
   } catch (e) {
-    // If dynamic import fails in test environment, just continue without auth header
+    // ignore
   }
   return config;
 });
@@ -47,18 +32,21 @@ api.interceptors.response.use(
     const status = error.response?.status;
     if (status === 401 || status === 403) {
       try {
-        const mod = await import('../stores/auth');
-        const useAuthStore = mod.useAuthStore;
-        const auth = useAuthStore();
-        // Ensure local state is cleared
-        if (auth && typeof auth.logout === 'function') auth.logout();
+        // Clear persisted token/state without importing the store to avoid
+        // circular/static-dynamic import warnings.
+        if (typeof localStorage !== 'undefined' && typeof localStorage.removeItem === 'function') {
+          localStorage.removeItem('token');
+          localStorage.removeItem('expiresAt');
+        }
       } catch (e) {
         // ignore
       }
       try {
-        const mod = await import('../router');
-        const router = mod.default;
-        if (router && typeof router.push === 'function') router.push('/login');
+        if (typeof window !== 'undefined' && window.location) {
+          // Avoid importing the router here to prevent circular dependencies
+          // and the Vite dynamic-import-with-static-import warning.
+          window.location.replace('/login');
+        }
       } catch (e) {
         // ignore
       }

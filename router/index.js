@@ -49,12 +49,13 @@ const router = createRouter({
 
 // Protección de rutas: solo /login es pública
 import { useAuthStore } from '../stores/auth';
+import { useUIStore } from '../stores/ui';
+
 router.beforeEach(async (to, from, next) => {
   const auth = useAuthStore();
   // Prevent navigation while a long-running import is in progress
   try {
-    const mod = await import('../stores/ui')
-    const ui = mod.useUIStore()
+    const ui = useUIStore()
     if (ui && ui.busy) {
       // Inform user and block navigation
       // eslint-disable-next-line no-alert

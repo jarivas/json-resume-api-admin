@@ -127,6 +127,22 @@ import NotificationsPanel from './components/NotificationsPanel.vue'
 import api from './services/api'
 import { useUIStore } from './stores/ui'
 
+import * as basicModule from './stores/modules/basic'
+import * as awardModule from './stores/modules/award'
+import * as publicationModule from './stores/modules/publication'
+import * as projectModule from './stores/modules/project'
+import * as languageModule from './stores/modules/language'
+import * as referenceModule from './stores/modules/reference'
+import * as skillModule from './stores/modules/skill'
+import * as volunteerModule from './stores/modules/volunteer'
+import * as workModule from './stores/modules/work'
+import * as certificateModule from './stores/modules/certificate'
+import * as educationModule from './stores/modules/education'
+import * as interestModule from './stores/modules/interest'
+import * as aiRequestModule from './stores/modules/aiRequest'
+import * as chatModule from './stores/modules/chat'
+
+
 const showAddModal = ref(false)
 const addingModule = ref('basic')
 const formState = ref({})
@@ -272,6 +288,23 @@ function findUseStore(mod, moduleName) {
   return null
 }
 
+const STORE_MODULES = {
+  basic: basicModule,
+  award: awardModule,
+  publication: publicationModule,
+  project: projectModule,
+  language: languageModule,
+  reference: referenceModule,
+  skill: skillModule,
+  volunteer: volunteerModule,
+  work: workModule,
+  certificate: certificateModule,
+  education: educationModule,
+  interest: interestModule,
+  aiRequest: aiRequestModule,
+  chat: chatModule,
+}
+
 function saveStoreItems(key, items) {
   try {
     localStorage.setItem(`jr_${key}`, JSON.stringify(items || []))
@@ -300,7 +333,7 @@ async function loadLocalStorageAtStartup() {
       const raw = localStorage.getItem(`jr_${key}`)
       if (!raw) continue
       const data = JSON.parse(raw)
-      const mod = await import(`./stores/modules/${key}.js`)
+      const mod = STORE_MODULES[key]
       const useStoreFn = findUseStore(mod, key)
       if (!useStoreFn) continue
       const store = useStoreFn()
@@ -324,7 +357,7 @@ async function importJsonToStores(data) {
   const mapping = Object.keys(data || {})
   for (const key of mapping) {
     try {
-      const mod = await import(`./stores/modules/${key}.js`)
+      const mod = STORE_MODULES[key]
       const useStoreFn = findUseStore(mod, key)
       if (!useStoreFn) continue
       const store = useStoreFn()
@@ -372,12 +405,12 @@ async function syncToBackend() {
   let totalCreated = 0
   let totalErrors = 0
   for (const key of modules) {
-    try {
-      syncStatuses[key].status = 'in-progress'
-      const mod = await import(`./stores/modules/${key}.js`)
-      const useStoreFn = findUseStore(mod, key)
-      if (!useStoreFn) continue
-      const store = useStoreFn()
+      try {
+        syncStatuses[key].status = 'in-progress'
+        const mod = STORE_MODULES[key]
+        const useStoreFn = findUseStore(mod, key)
+        if (!useStoreFn) continue
+        const store = useStoreFn()
       if (!store.items || !store.items.length) continue
       if (typeof store.create !== 'function') continue
 
@@ -483,7 +516,7 @@ async function syncToBackend() {
 async function createItem() {
   const module = addingModule.value
   try {
-    const mod = await import(`./stores/modules/${module}.js`)
+    const mod = STORE_MODULES[module]
     const useStoreFn = findUseStore(mod, module)
     if (!useStoreFn) throw new Error('Store not found')
     const store = useStoreFn()
@@ -506,53 +539,40 @@ async function createItem() {
 
 async function seedSampleData() {
   try {
-    const basic = await import('./stores/modules/basic')
-    const award = await import('./stores/modules/award')
-    const publication = await import('./stores/modules/publication')
-    const project = await import('./stores/modules/project')
-    const language = await import('./stores/modules/language')
-    const reference = await import('./stores/modules/reference')
-    const skill = await import('./stores/modules/skill')
-    const volunteer = await import('./stores/modules/volunteer')
-    const work = await import('./stores/modules/work')
-    const certificate = await import('./stores/modules/certificate')
-    const education = await import('./stores/modules/education')
-    const interest = await import('./stores/modules/interest')
-
-    const basicStore = basic.useBasicStore()
+    const basicStore = basicModule.useBasicStore()
     basicStore.items = [{ id: 1, name: 'Usuario Demo', email: 'demo@example.com' }]
 
-    const awardStore = award.useAwardStore()
+    const awardStore = awardModule.useAwardStore()
     awardStore.items = [{ id: 1, name: 'Premio Demo' }]
 
-    const pubStore = publication.usePublicationStore()
+    const pubStore = publicationModule.usePublicationStore()
     pubStore.items = [{ id: 1, name: 'Publicación Demo' }]
 
-    const projStore = project.useProjectStore()
+    const projStore = projectModule.useProjectStore()
     projStore.items = [{ id: 1, name: 'Proyecto Demo' }]
 
-    const langStore = language.useLanguageStore()
+    const langStore = languageModule.useLanguageStore()
     langStore.items = [{ id: 1, name: 'Español' }]
 
-    const refStore = reference.useReferenceStore()
+    const refStore = referenceModule.useReferenceStore()
     refStore.items = [{ id: 1, name: 'Referencia Demo' }]
 
-    const skillStore = skill.useSkillStore()
+    const skillStore = skillModule.useSkillStore()
     skillStore.items = [{ id: 1, name: 'JavaScript' }]
 
-    const volStore = volunteer.useVolunteerStore()
+    const volStore = volunteerModule.useVolunteerStore()
     volStore.items = [{ id: 1, name: 'Voluntariado Demo' }]
 
-    const workStore = work.useWorkStore()
+    const workStore = workModule.useWorkStore()
     workStore.items = [{ id: 1, name: 'Empresa Demo' }]
 
-    const certStore = certificate.useCertificateStore()
+    const certStore = certificateModule.useCertificateStore()
     certStore.items = [{ id: 1, name: 'Certificado Demo', date: '', issuer: '', url: '' }]
 
-    const eduStore = education.useEducationStore()
+    const eduStore = educationModule.useEducationStore()
     eduStore.items = [{ id: 1, name: 'Grado Demo' }]
 
-    const intStore = interest.useInterestStore()
+    const intStore = interestModule.useInterestStore()
     intStore.items = [{ id: 1, name: 'Interés Demo' }]
 
     alert('Datos de ejemplo cargados en memoria.')
